@@ -48,6 +48,9 @@ func validate(w fyne.Window) {
 				if !isInt(cherrys.Text) || !isInt(enemies.Text) {
 					validate(w)
 					dialog.ShowError(errors.New("Insert a number"), w)
+				} else if cherrys.Text == "0" || enemies.Text == "0" {
+					validate(w)
+					dialog.ShowError(errors.New("Please insert at least one on both"), w)
 				} else {
 					prog := dialog.NewProgress("Progress", "Nearly there...", w)
 					prog.Show()
