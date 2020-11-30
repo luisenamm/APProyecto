@@ -18,6 +18,11 @@ General Requirements
 --------------------
 In command line just write
   $ go run snakes.go
+  
+Packages
+-------------------- 
+ * [ebiten](https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2)
+ * [Fyne](https://pkg.go.dev/fyne.io/fyne?readme=expanded#Canvas)
 
 Video
 ------------
