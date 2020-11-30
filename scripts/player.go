@@ -9,7 +9,7 @@ var charDO *ebiten.DrawImageOptions
 
 //Player
 type Player struct {
-	game     *Scene
+	game     *Game
 	long     int
 	dir      string
 	points   int
@@ -19,7 +19,7 @@ type Player struct {
 	body     ebiten.Image
 }
 
-func newPlayer(g *Scene) *Player {
+func newPlayer(g *Game) *Player {
 	p := Player{
 		game:   g,
 		long:   0,
@@ -67,7 +67,7 @@ func (p *Player) Move(dotTime int) {
 		case "down":
 			p.moveHead(0, +20)
 		case "right":
-			p.moveHead(20, 0)
+			p.moveHead(+20, 0)
 		case "left":
 			p.moveHead(-20, 0)
 		}

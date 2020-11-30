@@ -10,7 +10,7 @@ import (
 
 //What snakes eat
 type Food struct {
-	game   *Scene
+	game   *Game
 	img    ebiten.Image
 	xLimit int
 	yLimit int
@@ -20,7 +20,7 @@ type Food struct {
 }
 
 //Creates Food
-func newFood(g *Scene) *Food {
+func newFood(g *Game) *Food {
 	f := Food{
 		game:   g,
 		xLimit: 30,
