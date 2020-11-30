@@ -16,13 +16,13 @@ Technical Requirements
 - Install Go version 1.12 or later
 - Using the standard go tools you can install Fyne's core library using:
         
-       $ go get fyne.io/fyne}
+        $ go get fyne.io/fyne}
         
 
 General Requirements
 --------------------
 In command line just write:
-
+        
         $ go run snakes.go}
   
   
