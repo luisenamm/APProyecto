@@ -49,6 +49,7 @@ func (w *Window) EndGame(screen *ebiten.Image) {
 		screenW := screen.Bounds().Dx()
 		screenH := screen.Bounds().Dy()
 		text.Draw(screen, goText, basicfont.Face7x13, screenW/2-textW/2, screenH/2+textH/2, color.White)
+		text.Draw(screen, "Score: "+strconv.Itoa(w.points), basicfont.Face7x13, 30, 30, color.White)
 
 	} else if w.points == w.score {
 		goText := "GREAT YOU WIN!"
@@ -56,18 +57,19 @@ func (w *Window) EndGame(screen *ebiten.Image) {
 		screenW := screen.Bounds().Dx()
 		screenH := screen.Bounds().Dy()
 		text.Draw(screen, goText, basicfont.Face7x13, screenW/2-textW/2, screenH/2+textH/2, color.White)
+		text.Draw(screen, "Score: "+strconv.Itoa(w.points), basicfont.Face7x13, 30, 30, color.White)
 	} else {
 		goText := "GAME OVER -> ENEMY ATE MORE"
 		textW, textH := TextFormat(goText)
 		screenW := screen.Bounds().Dx()
 		screenH := screen.Bounds().Dy()
 		text.Draw(screen, goText, basicfont.Face7x13, screenW/2-textW/2, screenH/2+textH/2, color.White)
+		text.Draw(screen, "Score: "+strconv.Itoa(w.points), basicfont.Face7x13, 30, 30, color.White)
 	}
 }
 
 // Draw text points
 func (w *Window) Draw(screen *ebiten.Image) error {
-	text.Draw(screen, "Score: "+strconv.Itoa(w.points), basicfont.Face7x13, 30, 30, color.RGBA{55, 192, 196, 1})
 	if !w.game.playing {
 		eatedCherrys := 0
 		max := 0
