@@ -12,44 +12,40 @@ import (
 
 var gm scripts.Game
 var cherryN int
-var enemies int
+var enemiesN int
 
 func init() {
-	if len(os.Args) < 2 { //check the arguments are correct
-		fmt.Println("Error. Cherry number missing")
+	if len(os.Args) != 3 {
+		fmt.Println("Wrong number of parameters")
 		os.Exit(3)
 	}
 
-	if len(os.Args) < 3 {
-		fmt.Println("Error. Enemies number missing")
-		os.Exit(3)
-	}
-
-	if len(os.Args) > 3 {
-		fmt.Println("Error. Too many arguments")
-		os.Exit(3)
-	}
 	var err error
 	cherryN, err = strconv.Atoi(os.Args[1])
 	if err != nil {
-		fmt.Println("Error. Only numeric values for cherrys")
+		fmt.Println("Cherry must be a number")
 		os.Exit(3)
 	}
 
-	enemies, err = strconv.Atoi(os.Args[2])
+	enemiesN, err = strconv.Atoi(os.Args[2])
 	if err != nil {
-		fmt.Println("Error. Only numeric values for enemies")
+		fmt.Println("Enemies must be number")
 		os.Exit(3)
 	}
-	gm = scripts.NewGame(cherryN, enemies)
 
+	if cherryN == 0 || enemiesN == 0 {
+		fmt.Println("At least one cherry and one enemy")
+		os.Exit(3)
+	}
+
+	gm = scripts.NewGame(cherryN, enemiesN)
 }
 
-// Game interface of ebiten
+// Game ebiten
 type Game struct {
 }
 
-// Update the main thread of the game
+// Update the thread
 func (g *Game) Update(screen *ebiten.Image) error {
 	if err := gm.Update(); err != nil {
 		return err
@@ -57,7 +53,7 @@ func (g *Game) Update(screen *ebiten.Image) error {
 	return nil
 }
 
-// Draw renders the image windows every tick
+// Draw the image
 func (g *Game) Draw(screen *ebiten.Image) {
 	if err := gm.Draw(screen); err != nil {
 		fmt.Println(err)
