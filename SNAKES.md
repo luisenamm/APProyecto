@@ -2,8 +2,10 @@ Multithreaded Snakes Game
 =========================
 
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/luisenamm/APProyecto)](https://pkg.go.dev/github.com/luisenamm/APProyecto)
-![version](https://img.shields.io/badge/version-1.2.3-blue)
-![Members](https://img.shields.io/badge/Team1-NicoleC-red)
+![Ebiten](https://img.shields.io/badge/version-1.12.4-blue)
+![Members](https://img.shields.io/badge/Team-NicoleC-red)
+![Members](https://img.shields.io/badge/Team-LuisN-blue)
+![Members](https://img.shields.io/badge/Team-MayraG-green)
 
 Implement a multithreaded version of the video game Snake
 The user will be able to choose the number of enemies and the number of cherrys 
