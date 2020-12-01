@@ -52,7 +52,7 @@ func NewGame(cherrys int, enemies int) Game {
 	g.enemies = arrayEnemies
 	g.snake = CreateSnake(&g)
 	g.snakeChan = make(chan int)
-	go g.snake.Behavior()
+	go g.snake.ChannelPipe()
 	g.hud = CreateHud(&g, cherrys)
 	return g
 }
@@ -70,20 +70,20 @@ func (g *Game) Update() error {
 		}
 		//update the channels
 		g.dotTime = (g.dotTime + 1) % 20
-		if err := g.snake.Update(g.dotTime); err != nil {
+		if err := g.snake.Direction(g.dotTime); err != nil {
 			g.snakeChan <- g.dotTime
 		}
 		for i := 0; i < len(g.enemiesChan); i++ {
 			g.enemiesChan[i] <- g.dotTime
 		}
-		xPos, yPos := g.snake.getHeadPos()
+		xPos, yPos := g.snake.GetSerpentHead()
 		for i := 0; i < len(g.cherries); i++ {
 			if xPos == g.cherries[i].xPos && yPos == g.cherries[i].yPos { //if snake eats a cherry grows
 				g.cherries[i].yPos = -20
 				g.cherries[i].xPos = -20
 				g.hud.addPoint()
 				g.numCherries--
-				g.snake.addPoint()
+				g.snake.AddPoint()
 				break
 			}
 		}

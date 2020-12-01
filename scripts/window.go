@@ -9,102 +9,104 @@ import (
 	"golang.org/x/image/font/basicfont"
 )
 
-// Hud for the game
-type Hud struct {
-	game         *Game
-	points       int
-	maxPoints    int
-	eatedCherrys int
-	highestScore int
+// Window GUI
+type Window struct {
+	game        *Game
+	score       int
+	points      int
+	totalPoints int
+	cherrys     int
 }
 
-// CreateHud : Constructor
-func CreateHud(g *Game, max int) *Hud {
-	h := Hud{
-		game:         g,
-		points:       0,
-		maxPoints:    max,
-		highestScore: 0,
+// CreateWindow initialices window
+func CreateWindow(g *Game, max int) *Window {
+	w := Window{
+		game:        g,
+		points:      0,
+		totalPoints: max,
+		score:       0,
 	}
 
-	return &h
+	return &w
 }
 
-func (h *Hud) addPoint() {
-	h.points++
+// AddPoint updates state GUI
+func (w *Window) AddPoint() {
+	w.points++
 }
 
-func textDimension(text string) (w int, h int) {
-	return 7 * len(text), 13
+//TextFormat gives format to text
+func TextFormat(text string) (w int, h int) {
+	return 10 * len(text), 16
 }
 
-// EndGame shows the final result
-func (h *Hud) EndGame(screen *ebiten.Image) { //method that checks the end of the game and the display
+// EndGame show results and detect ends
+func (w *Window) EndGame(screen *ebiten.Image) {
 
-	if h.game.snake.collision == true {
+	if w.game.snake.collision == true {
 		goText := "GAME OVER -> COLLISION DETECTED"
-		textW, textH := textDimension(goText)
+		textW, textH := TextFormat(goText)
 		screenW := screen.Bounds().Dx()
 		screenH := screen.Bounds().Dy()
 		text.Draw(screen, goText, basicfont.Face7x13, screenW/2-textW/2, screenH/2+textH/2, color.White)
 
-	} else if h.points == h.highestScore {
-		goText := "YOU WIN!!"
-		textW, textH := textDimension(goText)
+	} else if w.points == w.score {
+		goText := "GREAT YOU WIN!"
+		textW, textH := TextFormat(goText)
 		screenW := screen.Bounds().Dx()
 		screenH := screen.Bounds().Dy()
 		text.Draw(screen, goText, basicfont.Face7x13, screenW/2-textW/2, screenH/2+textH/2, color.White)
 	} else {
 		goText := "GAME OVER -> ENEMY ATE MORE"
-		textW, textH := textDimension(goText)
+		textW, textH := TextFormat(goText)
 		screenW := screen.Bounds().Dx()
 		screenH := screen.Bounds().Dy()
 		text.Draw(screen, goText, basicfont.Face7x13, screenW/2-textW/2, screenH/2+textH/2, color.White)
 	}
 }
 
-// Draw the hud
-func (h *Hud) Draw(screen *ebiten.Image) error {
-	text.Draw(screen, "Score: "+strconv.Itoa(h.points), basicfont.Face7x13, 20, 20, color.White)
-	if !h.game.playing {
+// Draw text points
+func (w *Window) Draw(screen *ebiten.Image) error {
+	text.Draw(screen, "Score: "+strconv.Itoa(w.points), basicfont.Face7x13, 30, 30, color.RGBA{55, 192, 196, 1})
+	if !w.game.playing {
 		eatedCherrys := 0
 		max := 0
-		for i := 0; i < len(h.game.enemies); i++ { //update the scorde hud
-			eatedCherrys += h.game.enemies[i].points
-			if max < h.game.enemies[i].points {
-				max = h.game.enemies[i].points
+		for i := 0; i < len(w.game.enemies); i++ {
+			eatedCherrys += w.game.enemies[i].points
+			if max < w.game.enemies[i].points {
+				max = w.game.enemies[i].points
 			}
 		}
 
-		eatedCherrys += h.game.snake.points
-		if max < h.game.snake.points {
-			max = h.game.snake.points
+		eatedCherrys += w.game.snake.points
+		if max < w.game.snake.points {
+			max = w.game.snake.points
 		}
-		h.highestScore = max
-		h.eatedCherrys = eatedCherrys
-		h.EndGame(screen)
+		w.score = max
+		w.cherrys = eatedCherrys
+		w.EndGame(screen)
 	}
 
 	return nil
 }
 
-//End2 wtf
-func (h *Hud) End2(screen *ebiten.Image) {
+//EndAux calls end principal and prepares function
+func (w *Window) EndAux(screen *ebiten.Image) {
 
 	eatedCherrys := 0
 	max := 0
-	for i := 0; i < len(h.game.enemies); i++ {
-		eatedCherrys += h.game.enemies[i].points
-		if max < h.game.enemies[i].points {
-			max = h.game.enemies[i].points
+	for i := 0; i < len(w.game.enemies); i++ {
+		eatedCherrys += w.game.enemies[i].points
+		if max < w.game.enemies[i].points {
+			max = w.game.enemies[i].points
 		}
 	}
 
-	eatedCherrys += h.game.snake.points
-	if max < h.game.snake.points {
-		max = h.game.snake.points
+	eatedCherrys += w.game.snake.points
+	if max < w.game.snake.points {
+		max = w.game.snake.points
 	}
-	h.highestScore = max
-	h.eatedCherrys = eatedCherrys
-	h.EndGame(screen)
+	w.score = max
+	w.cherrys = eatedCherrys
+	w.EndGame(screen)
 }
