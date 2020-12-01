@@ -42,7 +42,7 @@ The `scripts/` The main entities needed for the game are:
 
 In the image below you can see the uml
 
-![uml](UMLsnakes.jpg)
+![uml](UMLsnakes.JPG)
 
 
 ### Concurrency
