@@ -42,8 +42,8 @@ var gm scripts.Game
 var cherryN int
 var enemiesN int
 
-// Init runs as the program starts
-func Init() {
+// init function default runs at start
+func init() {
 	rand.Seed(time.Now().UnixNano())
 	if len(os.Args) != 3 {
 		fmt.Println("Wrong number of parameters")
@@ -186,23 +186,7 @@ func (w *World) Draw(pix []byte) {
 	}
 }
 
-//Max auxiliar function
-func Max(a, b int) int {
-	if a < b {
-		return b
-	}
-	return a
-}
-
-//Min auxiliar function
-func Min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-
-//Measurements set as constance for better understanding
+//measurements set as constance for better understanding
 const (
 	screenWidth  = 1080
 	screenHeight = 720
