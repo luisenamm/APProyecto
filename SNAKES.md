@@ -6,30 +6,24 @@ Multithreaded Snakes Game
 Implement a multithreaded version of the video game Snake
 The user will be able to choose the number of enemies and the number of cherrys 
 
-DEMO
-----------------------
-
-
 
 Technical Requirements
 ----------------------
 - Install Go version 1.12 or later
-- Using the standard go tools you can install Fyne's core library using:
+- Using the standard go tools you can install Ebiten library using:
         
-        $ go get fyne.io/fyne
+        $ go get -v github.com/hajimehoshi/ebiten
         
-
 General Requirements
 --------------------
 In command line just write:
         
-        $ go run snakes.go
+        $ go run main.go <numCherrys> <numEnemys>
   
   
 Packages
 -------------------- 
  * [ebiten](https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2)
- * [Fyne](https://pkg.go.dev/fyne.io/fyne?readme=expanded#Canvas)
 
 Video
 ------------

@@ -6,11 +6,11 @@ import (
 	"github.com/hajimehoshi/ebiten"
 )
 
-// Game : Main object of the scene. Parent of everything
+// Game object that contains everything
 type Game struct {
 	snake       *Snake
 	snakeChan   chan int
-	hud         *Hud
+	window      *Window
 	cherries    []*Cherry
 	numCherries int
 	numEnemies  int
@@ -21,7 +21,7 @@ type Game struct {
 	dotTime     int
 }
 
-// NewGame : Starts a new game assigning variables
+// NewGame starts a new game
 func NewGame(cherrys int, enemies int) Game {
 	g := Game{
 		playing:     true,
@@ -30,12 +30,12 @@ func NewGame(cherrys int, enemies int) Game {
 		numCherries: cherrys,
 		numEnemies:  enemies,
 	}
-	arrayC := make([]*Cherry, g.numCherries) //store all the cherries
+	arrayCherrys := make([]*Cherry, g.numCherries)
 	for i := 0; i < g.numCherries; i++ {
-		arrayC[i] = CreateCherry(&g)
+		arrayCherrys[i] = CreateCherry(&g)
 		time.Sleep(20)
 	}
-	arrayEnemies := make([]*EnemySnake, g.numEnemies) //store the enemies
+	arrayEnemies := make([]*EnemySnake, g.numEnemies)
 	for i := 0; i < len(arrayEnemies); i++ {
 		arrayEnemies[i] = CreateEnemySnake(&g)
 		time.Sleep(20)
@@ -43,32 +43,31 @@ func NewGame(cherrys int, enemies int) Game {
 	enemiesChan := make([]chan int, g.numEnemies)
 	for i := 0; i < len(enemiesChan); i++ {
 		enemiesChan[i] = make(chan int)
-		arrayEnemies[i].behavior = enemiesChan[i]
-		go arrayEnemies[i].Behavior()
+		arrayEnemies[i].channelMovements = enemiesChan[i]
+		go arrayEnemies[i].ChannelPipe()
 		time.Sleep(20)
 	}
-	g.enemiesChan = enemiesChan //make the references for the class
-	g.cherries = arrayC
+	g.enemiesChan = enemiesChan
+	g.cherries = arrayCherrys
 	g.enemies = arrayEnemies
 	g.snake = CreateSnake(&g)
 	g.snakeChan = make(chan int)
 	go g.snake.ChannelPipe()
-	g.hud = CreateHud(&g, cherrys)
+	g.window = CreateWindow(&g, cherrys)
 	return g
 }
 
 // End the game
 func (g *Game) End() {
-	g.playing = false //booleand to keep playing
+	g.playing = false
 }
 
-// Update the main process of the game
+// Update general program
 func (g *Game) Update() error {
 	if g.playing {
-		if g.numCherries == 0 { //when all cherries has been eating the game ends
+		if g.numCherries == 0 {
 			g.playing = false
 		}
-		//update the channels
 		g.dotTime = (g.dotTime + 1) % 20
 		if err := g.snake.Direction(g.dotTime); err != nil {
 			g.snakeChan <- g.dotTime
@@ -78,29 +77,27 @@ func (g *Game) Update() error {
 		}
 		xPos, yPos := g.snake.GetSerpentHead()
 		for i := 0; i < len(g.cherries); i++ {
-			if xPos == g.cherries[i].xPos && yPos == g.cherries[i].yPos { //if snake eats a cherry grows
+			if xPos == g.cherries[i].xPos && yPos == g.cherries[i].yPos {
 				g.cherries[i].yPos = -20
 				g.cherries[i].xPos = -20
-				g.hud.addPoint()
+				g.window.AddPoint()
 				g.numCherries--
 				g.snake.AddPoint()
 				break
 			}
 		}
-		for j := 0; j < len(g.enemies); j++ { //if enemi snake eats cherry grows
-			xPos, yPos := g.enemies[j].getHeadPos()
+		for j := 0; j < len(g.enemies); j++ {
+			xPos, yPos := g.enemies[j].GetSerpentHead()
 			for i := 0; i < len(g.cherries); i++ {
 				if xPos == g.cherries[i].xPos && yPos == g.cherries[i].yPos {
 					g.cherries[i].yPos = -20
 					g.cherries[i].xPos = -20
 					g.numCherries--
-					g.enemies[j].addPoint()
+					g.enemies[j].AddPoint()
 					break
 				}
 			}
 		}
-	} else {
-		//fmt.Println("game stopped")
 	}
 	for i := 0; i < g.numCherries; i++ {
 		if err := g.cherries[i].Update(g.dotTime); err != nil {
@@ -110,7 +107,7 @@ func (g *Game) Update() error {
 	return nil
 }
 
-// Draw the whole interface
+// Draw the game
 func (g *Game) Draw(screen *ebiten.Image) error {
 	if err := g.snake.Draw(screen, g.dotTime); err != nil {
 		return err
@@ -120,7 +117,7 @@ func (g *Game) Draw(screen *ebiten.Image) error {
 			return err
 		}
 	}
-	if err := g.hud.Draw(screen); err != nil {
+	if err := g.window.Draw(screen); err != nil {
 		return err
 	}
 	for i := 0; i < len(g.cherries); i++ {
@@ -129,7 +126,7 @@ func (g *Game) Draw(screen *ebiten.Image) error {
 		}
 	}
 	if g.numCherries == 0 {
-		g.hud.End2(screen)
+		g.window.EndAux(screen)
 	}
 	return nil
 }
