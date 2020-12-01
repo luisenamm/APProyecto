@@ -35,7 +35,9 @@ Packages
 
 Video
 ------------
+https://drive.google.com/file/d/1_lFb0mciOfHKERMheZFyNWhVw9Q-r-ny/view?usp=sharing
 
-
-
+Presentation
+------------
+https://docs.google.com/presentation/d/1Y0FemubVDV_xbLFseaz8fdN9mJWPg5-bdfRl67bUkzk/edit?usp=sharing
 
