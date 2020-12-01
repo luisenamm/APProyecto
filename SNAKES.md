@@ -6,6 +6,10 @@ Multithreaded Snakes Game
 Implement a multithreaded version of the video game Snake
 The user will be able to choose the number of enemies and the number of cherrys 
 
+Demo
+----------------------
+![](DEMOGIF.gif)
+
 
 Technical Requirements
 ----------------------
