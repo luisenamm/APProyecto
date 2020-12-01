@@ -78,7 +78,7 @@ func (s *Snake) Update(dotTime int) error {
 
 	if dotTime == 1 { //snakes collide with the boudings
 		xPos, yPos := s.getHeadPos()
-		if xPos < 0 || xPos > 580 || yPos < 0 || yPos > 580 || s.collisionWithHimself() {
+		if xPos < 0 || xPos > 1050 || yPos < 0 || yPos > 690 || s.collisionWithHimself() {
 			s.collision = true
 			s.game.End()
 		}
