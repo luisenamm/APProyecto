@@ -41,26 +41,24 @@ func textDimension(text string) (w int, h int) {
 // EndGame shows the final result
 func (h *Hud) EndGame(screen *ebiten.Image) { //method that checks the end of the game and the display
 
-	if h.eatedCherrys != h.maxPoints {
-		goText := "GAME OVER"
+	if h.game.snake.collision == true {
+		goText := "GAME OVER -> COLLISION DETECTED"
 		textW, textH := textDimension(goText)
 		screenW := screen.Bounds().Dx()
 		screenH := screen.Bounds().Dy()
-
 		text.Draw(screen, goText, basicfont.Face7x13, screenW/2-textW/2, screenH/2+textH/2, color.White)
+
 	} else if h.points == h.highestScore {
 		goText := "YOU WIN!!"
 		textW, textH := textDimension(goText)
 		screenW := screen.Bounds().Dx()
 		screenH := screen.Bounds().Dy()
-
 		text.Draw(screen, goText, basicfont.Face7x13, screenW/2-textW/2, screenH/2+textH/2, color.White)
 	} else {
-		goText := "GAME OVER"
+		goText := "GAME OVER -> ENEMY ATE MORE"
 		textW, textH := textDimension(goText)
 		screenW := screen.Bounds().Dx()
 		screenH := screen.Bounds().Dy()
-
 		text.Draw(screen, goText, basicfont.Face7x13, screenW/2-textW/2, screenH/2+textH/2, color.White)
 	}
 }

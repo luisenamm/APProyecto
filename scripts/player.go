@@ -22,6 +22,7 @@ type Snake struct {
 	pointsWaiting int
 	points        int
 	behavior      chan int
+	collision     bool
 }
 
 // CreateSnake : Generates a snake
@@ -31,6 +32,7 @@ func CreateSnake(g *Game) *Snake {
 		numParts:      0,
 		lastDir:       "right",
 		pointsWaiting: 0,
+		collision:     false,
 	}
 	s.behavior = make(chan int)
 	s.parts = append(s.parts, []float64{300, 300})
@@ -77,6 +79,7 @@ func (s *Snake) Update(dotTime int) error {
 	if dotTime == 1 { //snakes collide with the boudings
 		xPos, yPos := s.getHeadPos()
 		if xPos < 0 || xPos > 580 || yPos < 0 || yPos > 580 || s.collisionWithHimself() {
+			s.collision = true
 			s.game.End()
 		}
 	}

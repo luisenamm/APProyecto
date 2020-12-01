@@ -13,13 +13,18 @@ type EnemySnake struct {
 	game          *Game
 	numParts      int
 	lastDir       string
-	headImg       ebiten.Image
-	tailImg       ebiten.Image
+	headUp        ebiten.Image
+	headDown      ebiten.Image
+	headLeft      ebiten.Image
+	headRight     ebiten.Image
+	bodyH         ebiten.Image
+	bodyV         ebiten.Image
 	parts         [][]float64
 	seed          rand.Source
 	pointsWaiting int
 	points        int
 	behavior      chan int
+	collision     bool
 }
 
 // CreateEnemySnake : Generates an enemy snake
@@ -29,6 +34,7 @@ func CreateEnemySnake(g *Game) *EnemySnake {
 		numParts:      0,
 		lastDir:       "right",
 		pointsWaiting: 0,
+		collision:     false,
 	}
 
 	s.behavior = make(chan int)
@@ -39,11 +45,18 @@ func CreateEnemySnake(g *Game) *EnemySnake {
 
 	s.parts = append(s.parts, []float64{iniX, iniY})
 
-	headimg, _, _ := ebitenutil.NewImageFromFile("images/enemyNicH.png", ebiten.FilterDefault)
-	tailimg, _, _ := ebitenutil.NewImageFromFile("images/enemyNicH.png", ebiten.FilterDefault)
-
-	s.headImg = *headimg
-	s.tailImg = *tailimg
+	headUp, _, _ := ebitenutil.NewImageFromFile("images/headSerpentDownEnemy.png", ebiten.FilterDefault)
+	headDown, _, _ := ebitenutil.NewImageFromFile("images/headSerpentUpEnemy.png", ebiten.FilterDefault)
+	headLeft, _, _ := ebitenutil.NewImageFromFile("images/headSerpentLeftEnemy.png", ebiten.FilterDefault)
+	headRight, _, _ := ebitenutil.NewImageFromFile("images/headSerpentRightEnemy.png", ebiten.FilterDefault)
+	bodyH, _, _ := ebitenutil.NewImageFromFile("images/bodySerpentHEnemy.png", ebiten.FilterDefault)
+	bodyV, _, _ := ebitenutil.NewImageFromFile("images/bodySerpentVEnemy.png", ebiten.FilterDefault)
+	s.headUp = *headUp
+	s.headDown = *headDown
+	s.headLeft = *headLeft
+	s.headRight = *headRight
+	s.bodyH = *bodyH
+	s.bodyV = *bodyV
 
 	return &s
 }
@@ -116,6 +129,7 @@ func (s *EnemySnake) Update(dotTime int) error {
 	if dotTime == 1 { //checks collision with enemy snake
 		xPos, yPos := s.game.snake.getHeadPos()
 		if s.collisionWithPlayer(xPos, yPos) {
+			s.game.snake.collision = true
 			s.game.End()
 		}
 	}
@@ -130,12 +144,26 @@ func (s *EnemySnake) Draw(screen *ebiten.Image, dotTime int) error {
 	enemyDO := &ebiten.DrawImageOptions{}
 	xPos, yPos := s.getHeadPos()
 	enemyDO.GeoM.Translate(xPos, yPos)
-	screen.DrawImage(&s.headImg, enemyDO)
+
+	if s.lastDir == "up" {
+		screen.DrawImage(&s.headUp, enemyDO)
+	} else if s.lastDir == "down" {
+		screen.DrawImage(&s.headDown, enemyDO)
+	} else if s.lastDir == "right" {
+		screen.DrawImage(&s.headRight, enemyDO)
+	} else if s.lastDir == "left" {
+		screen.DrawImage(&s.headLeft, enemyDO)
+	}
+
 	for i := 0; i < s.numParts; i++ {
 		partDO := &ebiten.DrawImageOptions{}
 		xPos, yPos := s.getPartPos(i)
 		partDO.GeoM.Translate(xPos, yPos)
-		screen.DrawImage(&s.tailImg, partDO)
+		if s.lastDir == "up" || s.lastDir == "down" {
+			screen.DrawImage(&s.bodyH, partDO)
+		} else {
+			screen.DrawImage(&s.bodyV, partDO)
+		}
 	}
 
 	return nil

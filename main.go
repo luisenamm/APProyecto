@@ -41,11 +41,11 @@ func init() {
 	gm = scripts.NewGame(cherryN, enemiesN)
 }
 
-// Game ebiten
+// Game ebiten, code from api
 type Game struct {
 }
 
-// Update the thread
+// Update the thread, code from api
 func (g *Game) Update(screen *ebiten.Image) error {
 	if err := gm.Update(); err != nil {
 		return err
@@ -53,14 +53,14 @@ func (g *Game) Update(screen *ebiten.Image) error {
 	return nil
 }
 
-// Draw the image
+// Draw the image, code from api
 func (g *Game) Draw(screen *ebiten.Image) {
 	if err := gm.Draw(screen); err != nil {
 		fmt.Println(err)
 	}
 }
 
-// Layout : Function which executes when it needs to reajust
+// Layout : Function which executes when it needs to reajust, code from api
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
 	return 600, 600
 }
@@ -69,6 +69,7 @@ func main() {
 	ebiten.SetWindowSize(600, 600)
 	ebiten.SetWindowTitle("Gosnakes")
 
+	//code from api
 	if err := ebiten.RunGame(&Game{}); err != nil {
 		log.Fatal(err)
 	}
