@@ -42,7 +42,8 @@ var gm scripts.Game
 var cherryN int
 var enemiesN int
 
-func init() {
+// Init runs as the program starts
+func Init() {
 	rand.Seed(time.Now().UnixNano())
 	if len(os.Args) != 3 {
 		fmt.Println("Wrong number of parameters")
@@ -89,12 +90,12 @@ func NewWorld(width, height int, maxInitLiveCells int) *World {
 		width:  width,
 		height: height,
 	}
-	w.init(maxInitLiveCells)
+	w.Init(maxInitLiveCells)
 	return w
 }
 
-// init inits world with a random state.
-func (w *World) init(maxLiveCells int) {
+// Init inits world with a random state for the background
+func (w *World) Init(maxLiveCells int) {
 	for i := 0; i < maxLiveCells; i++ {
 		x := rand.Intn(w.width)
 		y := rand.Intn(w.height)
@@ -113,14 +114,14 @@ func (g *Game) Update(screen *ebiten.Image) error {
 	return nil
 }
 
-// Update game state by one tick.
+// Update game state by one tick. For the world
 func (w *World) Update() {
 	width := w.width
 	height := w.height
 	next := make([]bool, width*height)
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
-			pop := neighbourCount(w.area, width, height, x, y)
+			pop := NeighbourCount(w.area, width, height, x, y)
 			switch {
 			case pop < 2:
 				// rule 1. Any live cell with fewer than two live neighbours
@@ -147,8 +148,8 @@ func (w *World) Update() {
 	w.area = next
 }
 
-// neighbourCount calculates the Moore neighborhood of (x, y).
-func neighbourCount(a []bool, width, height, x, y int) int {
+// NeighbourCount calculates the Moore neighborhood of (x, y). Function already done
+func NeighbourCount(a []bool, width, height, x, y int) int {
 	c := 0
 	for j := -1; j <= 1; j++ {
 		for i := -1; i <= 1; i++ {
@@ -185,20 +186,23 @@ func (w *World) Draw(pix []byte) {
 	}
 }
 
-func max(a, b int) int {
+//Max auxiliar function
+func Max(a, b int) int {
 	if a < b {
 		return b
 	}
 	return a
 }
 
-func min(a, b int) int {
+//Min auxiliar function
+func Min(a, b int) int {
 	if a < b {
 		return a
 	}
 	return b
 }
 
+//Measurements set as constance for better understanding
 const (
 	screenWidth  = 1080
 	screenHeight = 720
@@ -224,6 +228,7 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 	return 1080, 720
 }
 
+//principal function
 func main() {
 	game := &Game{}
 
